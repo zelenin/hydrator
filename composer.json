@@ -1,0 +1,41 @@
+{
+    "name": "zelenin/hydrator",
+    "description": "Object hydrator",
+    "keywords": [
+        "hydrator",
+        "extractor",
+        "object hydration"
+    ],
+    "homepage": "https://github.com/zelenin/hydrator",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Aleksandr Zelenin",
+            "email": "aleksandr@zelenin.me",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/zelenin/hydrator/issues",
+        "source": "https://github.com/zelenin/hydrator"
+    },
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zelenin\\Hydrator\\": "src"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zelenin\\Hydrator\\Test\\": "tests"
+        }
+    }
+}
