@@ -64,6 +64,7 @@ final class ReflectionStrategy implements Strategy
     private function getProperties(string $className): array
     {
         if (!isset($this->propertiesCache[$className])) {
+            $this->propertiesCache[$className] = [];
             $reflectionClass = new ReflectionClass($className);
             foreach ($reflectionClass->getProperties() as $property) {
                 $property->setAccessible(true);
