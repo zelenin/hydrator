@@ -1,4 +1,4 @@
-# Hydrator
+# Hydrator [![Build Status](https://travis-ci.org/zelenin/hydrator.svg?branch=master)](https://travis-ci.org/zelenin/hydrator) [![Coverage Status](https://coveralls.io/repos/github/zelenin/hydrator/badge.svg?branch=master)](https://coveralls.io/github/zelenin/hydrator?branch=master)
 
 ## Installation
 
