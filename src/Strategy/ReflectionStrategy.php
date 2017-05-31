@@ -5,6 +5,7 @@ namespace Zelenin\Hydrator\Strategy;
 
 use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionObject;
 use ReflectionProperty;
 
 final class ReflectionStrategy implements Strategy
@@ -14,9 +15,18 @@ final class ReflectionStrategy implements Strategy
      */
     private $propertiesCache;
 
-    public function __construct()
+    /**
+     * @var bool
+     */
+    private $dynamicProperties;
+
+    /**
+     * @param bool $dynamicProperties
+     */
+    public function __construct(bool $dynamicProperties = false)
     {
         $this->propertiesCache = [];
+        $this->dynamicProperties = $dynamicProperties;
     }
 
     /**
@@ -29,7 +39,7 @@ final class ReflectionStrategy implements Strategy
         }
 
         $result = [];
-        foreach ($this->getProperties(get_class($object)) as $property) {
+        foreach ($this->getProperties($object) as $property) {
             $result[$property->getName()] = $property->getValue($object);
         }
 
@@ -45,11 +55,17 @@ final class ReflectionStrategy implements Strategy
             throw new InvalidArgumentException('Must be an object.');
         }
 
-        $properties = $this->getProperties(get_class($object));
+        $properties = $this->getProperties($object);
 
         foreach ($data as $name => $value) {
             if (isset($properties[$name])) {
                 $properties[$name]->setValue($object, $value);
+            } else {
+                if ($this->dynamicProperties) {
+                    $object->{$name} = $value;
+                } else {
+                    throw new InvalidArgumentException(sprintf('No property "%s" in class "%s".', $name, get_class($object)));
+                }
             }
         }
 
@@ -57,21 +73,22 @@ final class ReflectionStrategy implements Strategy
     }
 
     /**
-     * @param string $className
+     * @param object $object
      *
      * @return ReflectionProperty[]
      */
-    private function getProperties(string $className): array
+    private function getProperties($object): array
     {
-        if (!isset($this->propertiesCache[$className])) {
-            $this->propertiesCache[$className] = [];
-            $reflectionClass = new ReflectionClass($className);
-            foreach ($reflectionClass->getProperties() as $property) {
+        $cacheId = $this->dynamicProperties ? spl_object_hash($object) : get_class($object);
+        if (!isset($this->propertiesCache[$cacheId])) {
+            $this->propertiesCache[$cacheId] = [];
+            $reflection = $this->dynamicProperties ? new ReflectionObject($object) : new ReflectionClass($cacheId);
+            foreach ($reflection->getProperties() as $property) {
                 $property->setAccessible(true);
-                $this->propertiesCache[$className][$property->getName()] = $property;
+                $this->propertiesCache[$cacheId][$property->getName()] = $property;
             }
         }
 
-        return $this->propertiesCache[$className];
+        return $this->propertiesCache[$cacheId];
     }
 }
