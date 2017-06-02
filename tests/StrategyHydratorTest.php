@@ -48,7 +48,6 @@ final class StrategyHydratorTest extends TestCase
 
         $newEntity = $hydrator->hydrate($entity, $data);
 
-
         $this->assertEquals($newEntity->getId(), $data['id']);
         $this->assertEquals($newEntity->getName(), $data['name']);
     }
