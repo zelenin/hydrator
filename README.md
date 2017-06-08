@@ -9,13 +9,13 @@ The preferred way to install this extension is through [Composer](http://getcomp
 Either run
 
 ```
-php composer.phar require zelenin/hydrator "dev-master"
+php composer.phar require zelenin/hydrator "~0.0.1"
 ```
 
 or add
 
 ```
-"zelenin/hydrator": "dev-master"
+"zelenin/hydrator": "~0.0.1"
 ```
 
 to the require section of your ```composer.json```
