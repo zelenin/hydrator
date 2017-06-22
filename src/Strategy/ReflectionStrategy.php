@@ -83,10 +83,12 @@ final class ReflectionStrategy implements Strategy
         if (!isset($this->propertiesCache[$cacheId])) {
             $this->propertiesCache[$cacheId] = [];
             $reflection = $this->dynamicProperties ? new ReflectionObject($object) : new ReflectionClass($cacheId);
-            foreach ($reflection->getProperties() as $property) {
-                $property->setAccessible(true);
-                $this->propertiesCache[$cacheId][$property->getName()] = $property;
-            }
+            do {
+                foreach ($reflection->getProperties() as $property) {
+                    $property->setAccessible(true);
+                    $this->propertiesCache[$cacheId][$property->getName()] = $property;
+                }
+            } while ($reflection = $reflection->getParentClass());
         }
 
         return $this->propertiesCache[$cacheId];
